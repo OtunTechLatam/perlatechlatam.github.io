@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://perlatech.cl/sitemap.xml
