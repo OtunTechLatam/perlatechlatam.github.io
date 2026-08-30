@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://perlatech.cl/sitemap.xml
+Sitemap: https://otuntechlatam.github.io/perlatechlatam.github.io/sitemap.xml

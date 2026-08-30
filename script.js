@@ -2,12 +2,23 @@ const header=document.querySelector("#header"),menu=document.querySelector(".men
 menu?.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",open)});
 document.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
 addEventListener("scroll",()=>header.classList.toggle("scrolled",scrollY>20),{passive:true});
-const links=[...document.querySelectorAll("nav a[href^='#']")], sections=[...document.querySelectorAll("main section[id]")];
-new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-35% 0px -55%"}).observe;
-const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+e.target.id))}}),{rootMargin:"-35% 0px -55%"});
-sections.forEach(s=>spy.observe(s));
-const reveal=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");reveal.unobserve(e.target)}}),{threshold:.08});
-document.querySelectorAll(".reveal").forEach(x=>reveal.observe(x));
-const glow=document.querySelector(".cursor-glow"),dot=document.querySelector(".cursor-dot");
-if(matchMedia("(pointer:fine)").matches){let x=innerWidth/2,y=innerHeight/2,gx=x,gy=y;addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;dot.style.left=x+"px";dot.style.top=y+"px"},{passive:true});(function loop(){gx+=(x-gx)*.09;gy+=(y-gy)*.09;glow.style.left=gx+"px";glow.style.top=gy+"px";requestAnimationFrame(loop)})()}
-document.querySelector("#year").textContent=new Date().getFullYear();
+const links=[...document.querySelectorAll("nav a[href^='#']:not(.nav-cta)")],sections=[...document.querySelectorAll("main section[id]")];
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+e.target.id))}}),{rootMargin:"-35% 0px -55%"});sections.forEach(s=>spy.observe(s));
+const reveal=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");reveal.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll(".reveal:not(.visible)").forEach(x=>reveal.observe(x));
+const glow=document.querySelector(".cursor-glow"),dot=document.querySelector(".cursor-dot");if(matchMedia("(pointer:fine)").matches){let x=innerWidth/2,y=innerHeight/2,gx=x,gy=y;addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(dot){dot.style.left=x+"px";dot.style.top=y+"px"}},{passive:true});(function loop(){gx+=(x-gx)*.09;gy+=(y-gy)*.09;if(glow){glow.style.left=gx+"px";glow.style.top=gy+"px"}requestAnimationFrame(loop)})()}
+const yearEl=document.querySelector("#year");if(yearEl)yearEl.textContent=new Date().getFullYear();
+
+const serviceData={
+ software:{title:"Desarrollo de Software",desc:"Construimos productos y soluciones digitales a la medida, priorizando experiencia, mantenibilidad, seguridad y capacidad de evolución.",caps:["Sitios y plataformas web","Aplicaciones a medida","APIs e integraciones","Arquitectura backend","Modernización de soluciones","UX/UI y responsive"]},
+ cloud:{title:"Cloud & DevOps",desc:"Automatizamos el ciclo de entrega y fortalecemos la operación de plataformas para desplegar con mayor velocidad, control y observabilidad.",caps:["CI/CD","Docker y Kubernetes","AWS y Azure","Terraform / IaC","Observabilidad","Optimización de despliegues"]},
+ security:{title:"Ciberseguridad",desc:"Incorporamos seguridad como parte del diseño y la operación, identificando riesgos prioritarios y mejorando controles técnicos.",caps:["Evaluación de riesgos","Hardening","DevSecOps","Análisis de vulnerabilidades","Seguridad de accesos","Continuidad y buenas prácticas"]},
+ ai:{title:"Datos & Inteligencia Artificial",desc:"Diseñamos casos de uso de IA orientados a negocio, desde agentes y asistentes hasta analítica y automatización basada en datos.",caps:["Agentes de IA","Analítica y dashboards","Integración con APIs","Procesamiento de datos","Asistentes inteligentes","Casos de uso empresariales"]},
+ automation:{title:"Automatización",desc:"Reducimos trabajo manual conectando herramientas, reglas y procesos en flujos trazables que liberan tiempo para tareas de mayor valor.",caps:["Automatización de procesos","RPA","n8n y flujos","Integraciones","Notificaciones y tareas","Orquestación de procesos"]},
+ odoo:{title:"Odoo ERP & CRM",desc:"Alineamos Odoo con el proceso real del negocio, configurando módulos y flujos para mejorar control, trazabilidad y operación.",caps:["Ventas y CRM","Inventario","Punto de Venta","Compras","Procesos y permisos","Integraciones y adaptación"]}
+};
+const modal=document.querySelector("#serviceModal"),modalTitle=document.querySelector("#modalTitle"),modalDescription=document.querySelector("#modalDescription"),modalCapabilities=document.querySelector("#modalCapabilities"),serviceSelect=document.querySelector("#serviceSelect");
+function openService(key){const data=serviceData[key];if(!data||!modal)return;if(modalTitle)modalTitle.textContent=data.title;if(modalDescription)modalDescription.textContent=data.desc;if(modalCapabilities)modalCapabilities.innerHTML=data.caps.map(c=>`<span>${c}</span>`).join("");modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
+function closeService(){if(!modal)return;modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open")}
+document.querySelectorAll(".service-card,.solution-card").forEach(card=>card.querySelector(".service-open")?.addEventListener("click",()=>openService(card.dataset.service)));
+document.querySelectorAll("[data-close-modal]").forEach(el=>el.addEventListener("click",closeService));addEventListener("keydown",e=>{if(e.key==="Escape")closeService()});
+document.querySelectorAll("[data-fill-service]").forEach(link=>link.addEventListener("click",()=>{if(serviceSelect)serviceSelect.value=link.dataset.fillService}));
