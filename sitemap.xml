@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/index.html</loc></url><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/soluciones.html</loc></url><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/proyectos.html</loc></url><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/nosotros.html</loc></url><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/agenda.html</loc></url><url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/diagnostico.html</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/soluciones.html</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/proyectos.html</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/nosotros.html</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/agenda.html</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/diagnostico.html</loc></url>
+  <url><loc>https://otuntechlatam.github.io/perlatechlatam.github.io/pages/soporte.html</loc></url>
+</urlset>

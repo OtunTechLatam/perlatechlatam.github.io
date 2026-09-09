@@ -4,6 +4,8 @@
   const node=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
   const button=(text,fn,cls='button secondary small')=>{const n=node('button',text,cls);n.type='button';n.addEventListener('click',fn);return n;};
   const email=typeof cfg.email==='string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cfg.email)?cfg.email:'otuntechnologic@outlook.com';
+  const whatsapp=typeof cfg.whatsapp==='string' ? cfg.whatsapp.replace(/\D/g,'') : '';
+  const waLink=text=>whatsapp?`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`:'';
   $$('[data-year]').forEach(n=>n.textContent=new Date().getFullYear());
   const nav=$('#navigation'), toggle=$('.menu-toggle');
   function closeMenu(){nav?.classList.remove('open');toggle?.setAttribute('aria-expanded','false');}
@@ -16,8 +18,9 @@
   function data(form){return Object.fromEntries(new FormData(form));}
   function offlineResult(container,type,payload){
     container.replaceChildren();const box=node('div',undefined,'request-result');const text=C.requestText(type,payload);
-    box.append(node('p','Tu solicitud está preparada, pero todavía no se ha enviado. Abre tu correo y envíala, o descarga el resumen.'));
-    const a=node('a','Abrir mi correo ↗','button');a.href=C.mailto(email,`Solicitud de ${type} · PerlaTech`,text);box.append(a);
+    box.append(node('p','Tu solicitud está preparada, pero todavía no se ha enviado. Elige WhatsApp o correo para compartirla, o descarga el resumen.'));
+    if(whatsapp){const wa=node('a','Enviar por WhatsApp ↗','button');wa.href=waLink(`Hola PerlaTech. Quiero compartir esta solicitud:\n\n${text}`);wa.target='_blank';wa.rel='noopener noreferrer';box.append(wa);}
+    const a=node('a','Abrir mi correo ↗','button secondary');a.href=C.mailto(email,`Solicitud de ${type} · PerlaTech`,text);box.append(a);
     box.append(button('Descargar solicitud',()=>download('solicitud-perlatech.txt',text)));
     const label=node('label','También puedes copiar este texto');const ta=node('textarea');ta.readOnly=true;ta.value=text;ta.rows=6;label.append(ta);box.append(label);container.append(box);
   }
@@ -60,6 +63,23 @@
     wizard.addEventListener('submit',e=>{e.preventDefault();if(step<3){next.click();return;}const payload=data(wizard),error=C.validateDiagnostic(payload);if(error){status.textContent=error;status.classList.add('error');return;}send(wizard,'diagnostico',payload,status,result,submit);});
     $('#download-summary').addEventListener('click',()=>download('diagnostico-perlatech.txt',C.summary(data(wizard))));draw(false);
   }
+  const schedule=$('#schedule-request');
+  if(schedule){
+    const status=$('#schedule-status');
+    const dateInput=schedule.elements.date;
+    if(dateInput){const now=new Date();const local=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);dateInput.min=local;}
+    schedule.addEventListener('submit',e=>{
+      e.preventDefault();if(!schedule.reportValidity())return;
+      const d=data(schedule);const message=[
+        'Hola PerlaTech. Quiero coordinar un diagnóstico.',
+        '',`Nombre: ${d.name||''}`,`Empresa/proyecto: ${d.company||'Por conversar'}`,`Tema: ${d.topic||'Por definir'}`,`Fecha preferida: ${d.date||''}`,`Hora preferida: ${d.time||''}`,`Correo: ${d.email||'Por compartir'}`,
+        '','Sé que el horario queda sujeto a confirmación.'
+      ].join('\n');
+      const url=waLink(message);
+      if(url){window.open(url,'_blank','noopener,noreferrer');status.textContent='WhatsApp abierto con tu solicitud preparada. El horario se confirma cuando PerlaTech responda.';event('schedule_whatsapp_opened');}
+      else{location.href=C.mailto(email,'Solicitud de horario · PerlaTech',message);status.textContent='Abrimos tu correo con la solicitud preparada.';}
+    });
+  }
   const booking=$('#booking'),bookingURL=C.httpsUrl(cfg.bookingUrl);
   if(booking && bookingURL){
     booking.replaceChildren(node('h2','Elige el horario que te acomode'),node('p','La disponibilidad y la confirmación se gestionan en nuestra agenda externa. Desde su confirmación podrás cancelar o reagendar.'));
@@ -72,6 +92,10 @@
   }
   const access=$('#client-access'),portalURL=C.httpsUrl(cfg.clientPortalUrl);
   if(access && portalURL){access.replaceChildren(node('p','Accede al portal seguro con las credenciales facilitadas para tu proyecto.'));const a=node('a','Abrir mi portal ↗','button');a.href=portalURL;a.target='_blank';a.rel='noopener noreferrer';access.append(a);}
+  if(whatsapp && !document.querySelector('.whatsapp-float')){
+    const wa=node('a',undefined,'whatsapp-float');wa.href=waLink('Hola PerlaTech. Quiero conversar sobre un proyecto.');wa.target='_blank';wa.rel='noopener noreferrer';wa.setAttribute('aria-label','Conversar con PerlaTech por WhatsApp');
+    wa.append(node('span','✦'),node('span','WhatsApp','label'));document.body.append(wa);
+  }
   if(!$('#demo-board'))return;
   let state=C.initialDemo(),counter=3,proposal='';const stages=['Nuevo','Propuesta','Proyecto'];
   function log(text){state.activity.unshift(text);state.activity=state.activity.slice(0,12);$('#demo-status').textContent=text;}
