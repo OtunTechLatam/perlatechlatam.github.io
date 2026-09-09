@@ -3,12 +3,19 @@ window.PERLATECH_CONFIG = Object.freeze({
   email: 'otuntechnologic@outlook.com',
   phoneDisplay: '+56 9 6814 4532',
   whatsapp: '56968144532',
-  /* Pega aquí una URL pública HTTPS de Cal.com, Microsoft Bookings, Calendly, etc.
-     Cuando exista, pages/agenda.html mostrará la agenda real automáticamente. */
-  bookingUrl: '',
-  /* Endpoint HTTPS opcional para recibir formularios como JSON. Si queda vacío,
-     el sitio ofrece envío por WhatsApp/correo sin fingir que los datos fueron recibidos. */
+
+  /* Agenda pública HTTPS: Cal.com, Microsoft Bookings, Calendly, etc. */
+  bookingUrl: 'https://cal.com/perla-tech/30min',
+  bookingProvider: 'cal.com', // auto | cal.com | calendly | microsoft-bookings
+
+  /* Endpoint HTTPS opcional para formularios. Debe aceptar POST JSON y responder:
+     { received: true, id: 'referencia' }. Si está vacío, se ofrece WhatsApp/correo. */
   requestEndpoint: '',
-  /* Portal externo real, si se implementa con autenticación del lado servidor. */
+
+  /* Google Analytics 4. Ejemplo: G-XXXXXXXXXX. Si está vacío, no se carga Analytics. */
+  ga4MeasurementId: '',
+  analyticsDebug: false, // true = muestra los eventos en la consola del navegador
+
+  /* Portal externo real con autenticación del lado servidor, si se implementa. */
   clientPortalUrl: ''
 });

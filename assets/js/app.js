@@ -6,6 +6,20 @@
   const email=typeof cfg.email==='string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cfg.email)?cfg.email:'otuntechnologic@outlook.com';
   const whatsapp=typeof cfg.whatsapp==='string' ? cfg.whatsapp.replace(/\D/g,'') : '';
   const waLink=text=>whatsapp?`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`:'';
+  const waIcon=()=>{const img=document.createElement('img');img.className='wa-logo';img.src='https://cdn.simpleicons.org/whatsapp/FFFFFF/FFFFFF';img.alt='';img.width=22;img.height=22;img.setAttribute('aria-hidden','true');img.decoding='async';return img;};
+  const decorateWhatsApp=(a,label='WhatsApp')=>{a.replaceChildren(waIcon(),node('span',label,'label'));return a;};
+  const analyticsDebug=cfg.analyticsDebug===true;
+  window.PERLATECH_ANALYTICS={enabled:false,measurementId:null,events:[]};
+
+  // Analytics comercial opcional. No se envían campos de formularios ni datos personales.
+  const gaId=typeof cfg.ga4MeasurementId==='string' && /^G-[A-Z0-9]+$/i.test(cfg.ga4MeasurementId.trim())?cfg.ga4MeasurementId.trim().toUpperCase():'';
+  window.PERLATECH_ANALYTICS.enabled=!!gaId;window.PERLATECH_ANALYTICS.measurementId=gaId||null;
+  if(gaId){
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=window.gtag||function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config',gaId,{anonymize_ip:true,send_page_view:true});
+    const gaScript=document.createElement('script');gaScript.async=true;gaScript.src=`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;document.head.append(gaScript);
+  }
   $$('[data-year]').forEach(n=>n.textContent=new Date().getFullYear());
   const nav=$('#navigation'), toggle=$('.menu-toggle');
   // Tema visual: claro por defecto, oscuro opcional. La preferencia se guarda sólo en este navegador.
@@ -27,19 +41,29 @@
     document.documentElement.dataset.theme=next;
     try{localStorage.setItem('perlatech-theme',next);}catch{}
     paintThemeButton();
+    if(typeof window.__PERLATECH_SYNC_CAL_THEME==='function')window.__PERLATECH_SYNC_CAL_THEME(next);
+    event('theme_changed',{theme:next});
   });
   function closeMenu(){nav?.classList.remove('open');toggle?.setAttribute('aria-expanded','false');}
   toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));});
   nav?.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape' && nav?.classList.contains('open')){closeMenu();toggle.focus();}});
   document.addEventListener('click',e=>{if(!e.target.closest('.header'))closeMenu();});
-  const event=name=>document.dispatchEvent(new CustomEvent('perlatech:event',{detail:{name}})); // No data sent or stored.
+  const event=(name,params={})=>{
+    const safe={page_path:location.pathname,...params};
+    const record={name,...safe,timestamp:new Date().toISOString()};
+    window.PERLATECH_ANALYTICS.events.push(record);
+    if(window.PERLATECH_ANALYTICS.events.length>80)window.PERLATECH_ANALYTICS.events.shift();
+    document.dispatchEvent(new CustomEvent('perlatech:event',{detail:record}));
+    if(analyticsDebug)console.info('[PerlaTech event]',record);
+    if(gaId && typeof window.gtag==='function')gtag('event',name,safe);
+  };
   function download(filename,text){const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=node('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function data(form){return Object.fromEntries(new FormData(form));}
   function offlineResult(container,type,payload){
     container.replaceChildren();const box=node('div',undefined,'request-result');const text=C.requestText(type,payload);
     box.append(node('p','Tu solicitud está preparada, pero todavía no se ha enviado. Elige WhatsApp o correo para compartirla, o descarga el resumen.'));
-    if(whatsapp){const wa=node('a','Enviar por WhatsApp ↗','button');wa.href=waLink(`Hola PerlaTech. Quiero compartir esta solicitud:\n\n${text}`);wa.target='_blank';wa.rel='noopener noreferrer';box.append(wa);}
+    if(whatsapp){const wa=node('a',undefined,'button whatsapp-action');wa.href=waLink(`Hola PerlaTech. Quiero compartir esta solicitud:\n\n${text}`);wa.target='_blank';wa.rel='noopener noreferrer';decorateWhatsApp(wa,'Enviar por WhatsApp ↗');box.append(wa);}
     const a=node('a','Abrir mi correo ↗','button secondary');a.href=C.mailto(email,`Solicitud de ${type} · PerlaTech`,text);box.append(a);
     box.append(button('Descargar solicitud',()=>download('solicitud-perlatech.txt',text)));
     const label=node('label','También puedes copiar este texto');const ta=node('textarea');ta.readOnly=true;ta.value=text;ta.rows=6;label.append(ta);box.append(label);container.append(box);
@@ -49,7 +73,7 @@
   async function send(form,type,payload,status,result,submit){
     if(pending.has(form))return;
     status.classList.remove('error');result.replaceChildren();
-    if(!endpoint){status.textContent='Resumen preparado. Falta enviarlo desde tu correo.';offlineResult(result,type,payload);event('request_prepared');return;}
+    if(!endpoint){status.textContent='Resumen preparado. Elige WhatsApp o correo para enviarlo.';offlineResult(result,type,payload);event('form_prepared',{form_type:type});return;}
     const signature=JSON.stringify({type,payload});
     if(received.get(form)?.signature===signature){status.textContent=`Esta solicitud ya fue recibida. Referencia: ${received.get(form).id}.`;return;}
     let req=requestIds.get(form);if(!req || req.signature!==signature){req={signature,id:crypto.randomUUID()};requestIds.set(form,req);}
@@ -60,7 +84,7 @@
       if(!response.ok)throw new Error('Rejected');
       const body=await response.json();
       if(body.received!==true || typeof body.id!=='string' || !body.id.trim() || body.id.length>120)throw new Error('Invalid receipt');
-      received.set(form,{signature,id:body.id});status.textContent=`Solicitud recibida. Referencia: ${body.id}. ${type==='diagnostico'?'Esto no confirma una reserva.':''}`;event('request_received');
+      received.set(form,{signature,id:body.id});status.textContent=`Solicitud recibida. Referencia: ${body.id}. ${type==='diagnostico'?'Esto no confirma una reserva.':''}`;event('form_submitted',{form_type:type});
     }catch{
       status.classList.add('error');status.textContent='No pudimos confirmar la recepción. Puedes reintentar o usar el correo. Si ya se recibió, el reintento conserva la misma referencia de solicitud.';
       offlineResult(result,type,payload);
@@ -100,22 +124,100 @@
       else{location.href=C.mailto(email,'Solicitud de horario · PerlaTech',message);status.textContent='Abrimos tu correo con la solicitud preparada.';}
     });
   }
+  function bootCalEmbed(){
+    if(typeof window.Cal==='function')return window.Cal;
+    ((Cw,A,L)=>{
+      const push=(a,args)=>a.q.push(args),d=Cw.document;
+      Cw.Cal=Cw.Cal||function(){
+        const cal=Cw.Cal,args=arguments;
+        if(!cal.loaded){cal.ns={};cal.q=cal.q||[];const script=d.createElement('script');script.src=A;script.async=true;d.head.appendChild(script);cal.loaded=true;}
+        if(args[0]===L){
+          const api=function(){push(api,arguments);},namespace=args[1];api.q=api.q||[];
+          if(typeof namespace==='string'){cal.ns[namespace]=cal.ns[namespace]||api;push(cal.ns[namespace],args);push(cal,['initNamespace',namespace]);}
+          else push(cal,args);
+          return;
+        }
+        push(cal,args);
+      };
+    })(window,'https://app.cal.com/embed/embed.js','init');
+    return window.Cal;
+  }
   const booking=$('#booking'),bookingURL=C.httpsUrl(cfg.bookingUrl);
   if(booking && bookingURL){
-    booking.replaceChildren(node('h2','Elige el horario que te acomode'),node('p','La disponibilidad y la confirmación se gestionan en nuestra agenda externa. Desde su confirmación podrás cancelar o reagendar.'));
-    const link=node('a','Abrir agenda en otra pestaña ↗','button');link.href=bookingURL;link.target='_blank';link.rel='noopener noreferrer';booking.append(link);
-    const host=new URL(bookingURL).hostname;
-    if(host==='cal.com'){
-      const load=button('Mostrar agenda aquí',()=>{load.remove();const frame=document.createElement('iframe');frame.title='Agenda de diagnóstico PerlaTech';frame.src=bookingURL;frame.referrerPolicy='strict-origin-when-cross-origin';booking.append(frame);event('booking_opened');});booking.append(load);
-      booking.append(node('p','Al mostrar la agenda se cargará contenido de Cal.com. Si no aparece, utiliza el enlace para abrirla en otra pestaña.','fine'));
+    const parsedBooking=new URL(bookingURL),host=parsedBooking.hostname.toLowerCase();
+    const provider=host==='cal.com'||host.endsWith('.cal.com')?'Cal.com':host.includes('calendly.com')?'Calendly':(host.includes('outlook.office.com')||host.includes('bookings.microsoft')||host.includes('microsoft.com'))?'Microsoft Bookings':'agenda online';
+    booking.replaceChildren();
+    const badge=node('span',`AGENDA CONECTADA · ${provider}`,'tag booking-provider');booking.append(badge);
+    booking.append(node('h2','Elige un horario disponible'),node('p',`La disponibilidad y la confirmación se gestionan directamente en ${provider}.`));
+
+    if(provider==='Cal.com'){
+      const calLink=parsedBooking.pathname.replace(/^\/+|\/+$/g,'');
+      const calWrap=node('div',undefined,'cal-inline-shell');
+      const calInline=node('div',undefined,'cal-inline-embed');calInline.id='perlatech-cal-inline';
+      const calStatus=node('p','Cargando disponibilidad en tiempo real…','cal-booking-status');calStatus.id='cal-booking-status';calStatus.setAttribute('role','status');
+      calWrap.append(calInline,calStatus);booking.append(calWrap);
+      const actions=node('div',undefined,'inline-actions');
+      const link=node('a','Abrir agenda en Cal.com ↗','button secondary small');link.href=bookingURL;link.target='_blank';link.rel='noopener noreferrer';link.dataset.track='booking_provider_clicked';actions.append(link);booking.append(actions);
+      try{
+        const Cal=bootCalEmbed(),ns='perlatech30min';
+        Cal('init',ns,{origin:'https://cal.com'});
+        const api=Cal.ns[ns];
+        api('inline',{elementOrSelector:'#perlatech-cal-inline',calLink,config:{layout:'month_view'}});
+        const syncTheme=theme=>api('ui',{
+          theme:theme==='dark'?'dark':'light',
+          hideEventTypeDetails:false,
+          layout:'month_view',
+          cssVarsPerTheme:{
+            light:{'cal-brand':'#58df19','cal-brand-emphasis':'#41bd0e','cal-brand-text':'#061109'},
+            dark:{'cal-brand':'#78ef1d','cal-brand-emphasis':'#91ff3b','cal-brand-text':'#061109'}
+          }
+        });
+        window.__PERLATECH_SYNC_CAL_THEME=syncTheme;syncTheme(readTheme());
+        api('on',{action:'bookerReady',callback:()=>{calStatus.textContent='Selecciona el día y horario que mejor te acomode.';event('cal_booker_ready',{provider:'Cal.com'});}});
+        api('on',{action:'bookerViewed',callback:()=>event('cal_booker_viewed',{provider:'Cal.com'})});
+        api('on',{action:'bookingSuccessfulV2',callback:e=>{
+          const d=e?.detail?.data||{};
+          calStatus.textContent='Reserva creada correctamente en Cal.com. Revisa tu correo para la confirmación y los detalles de la reunión.';
+          event('booking_successful',{provider:'Cal.com',status:d.status||'created',event_type_id:d.eventTypeId||undefined});
+        }});
+        api('on',{action:'linkFailed',callback:()=>{calStatus.textContent='No pudimos cargar la agenda dentro del sitio. Usa “Abrir agenda en Cal.com” para reservar.';event('booking_embed_failed',{provider:'Cal.com'});}});
+        event('booking_embedded',{provider:'Cal.com'});
+      }catch{
+        calStatus.textContent='No pudimos cargar la agenda dentro del sitio. Usa “Abrir agenda en Cal.com” para reservar.';
+      }
+    }else{
+      const link=node('a',`Abrir ${provider} ↗`,'button');link.href=bookingURL;link.target='_blank';link.rel='noopener noreferrer';link.dataset.track='booking_provider_clicked';booking.append(link);
+      const embeddable=provider==='Calendly';
+      if(embeddable){
+        const load=button('Mostrar agenda aquí',()=>{load.remove();const frame=document.createElement('iframe');frame.title=`Agenda de diagnóstico PerlaTech en ${provider}`;frame.src=bookingURL;frame.referrerPolicy='strict-origin-when-cross-origin';frame.loading='lazy';booking.append(frame);event('booking_embedded',{provider});},'button secondary');booking.append(load);
+      }
     }
+    event('booking_provider_ready',{provider});
   }
   const access=$('#client-access'),portalURL=C.httpsUrl(cfg.clientPortalUrl);
   if(access && portalURL){access.replaceChildren(node('p','Accede al portal seguro con las credenciales facilitadas para tu proyecto.'));const a=node('a','Abrir mi portal ↗','button');a.href=portalURL;a.target='_blank';a.rel='noopener noreferrer';access.append(a);}
   if(whatsapp && !document.querySelector('.whatsapp-float')){
-    const wa=node('a',undefined,'whatsapp-float');wa.href=waLink('Hola PerlaTech. Quiero conversar sobre un proyecto.');wa.target='_blank';wa.rel='noopener noreferrer';wa.setAttribute('aria-label','Conversar con PerlaTech por WhatsApp');
-    wa.append(node('span','✦'),node('span','WhatsApp','label'));document.body.append(wa);
+    const path=location.pathname.toLowerCase();
+    const context=path.includes('soluciones')?'sus soluciones':path.includes('proyectos')?'sus proyectos y casos':path.includes('agenda')?'agendar un diagnóstico':path.includes('diagnostico')?'preparar un diagnóstico':path.includes('soporte')?'una solicitud de soporte':path.includes('nosotros')?'PerlaTech':'un proyecto';
+    const wa=node('a',undefined,'whatsapp-float');wa.href=waLink(`Hola PerlaTech. Estoy revisando ${context} y quiero conversar.`);wa.target='_blank';wa.rel='noopener noreferrer';wa.setAttribute('aria-label','Conversar con PerlaTech por WhatsApp');wa.dataset.track='whatsapp_float';
+    decorateWhatsApp(wa,'WhatsApp');document.body.append(wa);
   }
+
+  // Medición de acciones comerciales sin capturar contenido ni datos personales.
+  document.addEventListener('click',e=>{
+    const el=e.target.closest('a,button');if(!el)return;
+    const href=el.matches('a')?(el.getAttribute('href')||''):'';
+    let name=el.dataset.track||'';
+    if(!name && href.includes('wa.me/'))name='whatsapp_clicked';
+    else if(!name && /agenda\.html/.test(href))name='agenda_clicked';
+    else if(!name && /diagnostico\.html/.test(href))name='diagnostic_clicked';
+    else if(!name && href.startsWith('mailto:'))name='email_clicked';
+    else if(!name && href.startsWith('tel:'))name='phone_clicked';
+    else if(!name && /setecma\.cl/.test(href))name='project_external_clicked';
+    if(name)event(name,{location:el.closest('header')?'header':el.closest('footer')?'footer':el.classList.contains('whatsapp-float')?'floating':'content'});
+  });
+
+  $$('form').forEach(form=>{let started=false;form.addEventListener('focusin',()=>{if(!started){started=true;event('form_started',{form_id:form.id||form.dataset.request||'form'});}});});
   // Movimiento sutil y navegación visual. Se desactiva automáticamente si el usuario prefiere reducir animaciones.
   const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 

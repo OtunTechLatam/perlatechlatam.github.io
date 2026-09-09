@@ -241,3 +241,73 @@ html[data-theme="light"] .project-copy p{color:#53695b}
   .page-intro h1{font-size:clamp(2.45rem,11vw,3.6rem)}
   .demo-heading h1{font-size:clamp(2.35rem,10vw,3.2rem)}
 }
+
+
+/* ===== PerlaTech V3 comercial ===== */
+.compact-section{padding-block:68px}.tech-section{overflow:hidden}.tech-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.tech-card{min-height:230px;padding:26px;border:1px solid var(--line);border-radius:18px;background:var(--panel);display:flex;flex-direction:column}.tech-card h3{margin-top:24px;margin-bottom:8px}.tech-card p{margin:0}.tech-mark{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:42px;padding:9px 13px;border:1px solid #3b6b43;border-radius:10px;color:var(--lime);font-size:.78rem;font-weight:900;letter-spacing:.08em;background:#07150d}.tech-grid.carousel-enhanced .carousel-slide{flex-basis:calc((100% - 60px)/4)}
+html[data-theme="light"] .tech-card{background:#fff;border-color:#d5e5da;box-shadow:0 12px 36px rgba(34,82,49,.06)}html[data-theme="light"] .tech-card h3{color:#10261a}html[data-theme="light"] .tech-card p{color:#53695b}html[data-theme="light"] .tech-mark{background:#eff8f1;border-color:#c3dec9;color:#137a36}
+.case-carousel.carousel-enhanced .carousel-slide{flex-basis:100%}.case-carousel{margin-top:6px}.case-slide{min-width:0}.case-slide .project-feature{height:100%;margin:0}.case-kicker{display:inline-flex;align-self:flex-start;margin-bottom:auto;padding:7px 10px;border:1px solid rgba(121,239,22,.35);border-radius:999px;color:#bafa89;font-size:.67rem;font-weight:900;letter-spacing:.11em}.project-visual-demo{background:radial-gradient(circle at 70% 20%,#19542a 0,transparent 35%),linear-gradient(145deg,#06140c,#0c2817)}.project-visual-demo strong{font-size:clamp(2.2rem,5vw,4.6rem)}
+.faq-home{padding-top:78px}.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 36px;max-width:none}.faq-grid details{min-width:0}.faq-grid summary{line-height:1.35}.faq-grid details p{max-width:620px}
+html[data-theme="light"] .faq-grid details{border-color:#d7e5da}html[data-theme="light"] .faq-grid summary{color:#173222}html[data-theme="light"] .faq-grid details p{color:#53695b}
+/* Ajuste de jerarquía desktop: más contenido visible sin perder aire */
+@media(min-width:1200px){.hero{padding-block:62px 58px}.hero h1{font-size:clamp(3.4rem,4.75vw,5.1rem)}.section{padding-block:76px}.page-intro{padding-block:58px 42px}.page-intro h1{max-width:920px}.project-feature{min-height:430px}}
+@media(max-width:1100px){.tech-grid.carousel-enhanced .carousel-slide{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:720px){.tech-grid.carousel-enhanced .carousel-slide{flex-basis:84%}.faq-grid{grid-template-columns:1fr}.case-slide .project-feature{min-height:0}.case-carousel.carousel-enhanced .carousel-slide{flex-basis:94%}}
+@media(max-width:430px){.container{width:calc(100% - 26px)}.header .brand>span{font-size:1.18rem}.header .brand small{letter-spacing:.11em}.hero h1{font-size:clamp(2.65rem,13vw,3.25rem)}.hero-media{min-height:330px}.button{padding:13px 18px}.section{padding-block:54px}.project-copy,.project-visual{padding:24px}.project-visual strong{font-size:2.5rem}.case-kicker{margin-bottom:26px}}
+
+
+/* ===== V3.1: tecnología visible + conversiones accesibles ===== */
+.tech-showcase{padding-block:86px 76px;background:linear-gradient(180deg,transparent,rgba(18,83,41,.055),transparent)}
+.tech-section-note{display:grid;gap:4px;max-width:390px;padding:14px 17px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.tech-section-note strong{font-size:.83rem;color:var(--ink)}.tech-section-note span{font-size:.76rem;color:var(--muted)}
+.technology-marquee{width:100%;overflow:hidden;border-block:1px solid var(--line);background:var(--panel);mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+.technology-track{display:flex;width:max-content;animation:technology-flow 34s linear infinite;will-change:transform}.technology-marquee:hover .technology-track,.technology-marquee:focus-within .technology-track{animation-play-state:paused}
+.technology-set{display:flex;align-items:stretch;gap:16px;padding:22px 8px 22px 16px}
+.technology-pill{display:flex;align-items:center;gap:14px;width:300px;min-height:92px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--panel-2);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+.technology-pill strong,.technology-pill small{display:block}.technology-pill strong{font-size:.92rem;color:var(--ink);margin-bottom:3px}.technology-pill small{font-size:.72rem;color:var(--muted)}
+.technology-logo{display:grid;place-items:center;flex:0 0 58px;height:58px;border-radius:14px;border:1px solid #376340;background:#07160d;color:var(--lime);font-size:.72rem;font-weight:950;letter-spacing:.05em}.technology-logo.aws{font-size:.88rem}.technology-logo.docker{font-size:.58rem}.technology-logo.odoo{font-size:.62rem}
+.technology-foot{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding-top:18px}.technology-foot span{padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.69rem;font-weight:800;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+@keyframes technology-flow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+html[data-theme="light"] .tech-showcase{background:linear-gradient(180deg,#fff,#f1f8f3 45%,#fff)}html[data-theme="light"] .technology-marquee{background:#eef7f0;border-color:#d5e6d9}html[data-theme="light"] .technology-pill{background:#fff;border-color:#d1e3d6;box-shadow:0 12px 32px rgba(25,78,43,.07)}html[data-theme="light"] .technology-logo{background:#eaf6ed;border-color:#bfdcc5;color:#137b36}html[data-theme="light"] .tech-section-note,html[data-theme="light"] .technology-foot span{background:#fff;border-color:#d5e6d9}
+.whatsapp-static{visibility:visible!important;opacity:1!important}.whatsapp-float .wa-symbol{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.26);font-size:.86rem}.whatsapp-float{border:1px solid rgba(255,255,255,.35)}
+.booking-compat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}.booking-compat span{width:100%;font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}.booking-compat strong{padding:6px 9px;border-radius:8px;border:1px solid var(--line);font-size:.73rem;color:var(--ink);background:var(--panel-2)}.booking-provider{margin-bottom:18px}
+html[data-theme="light"] .booking-compat strong{background:#eef8f1;border-color:#cbe2d0;color:#175c2c}
+@media(max-width:720px){.tech-showcase{padding-block:60px}.technology-pill{width:260px;min-height:84px}.technology-set{gap:12px}.technology-track{animation-duration:29s}.tech-section-note{max-width:none}.technology-foot{justify-content:flex-start}.whatsapp-float{max-width:calc(100vw - 28px)}}
+@media(prefers-reduced-motion:reduce){.technology-track{animation:none;overflow-x:auto}.technology-marquee{overflow-x:auto}.technology-set[aria-hidden="true"]{display:none}}
+
+
+/* V3.2 · fidelidad de marcas */
+.technology-logo{
+  padding:10px;
+  background:#fff!important;
+  border-color:rgba(14,54,29,.13)!important;
+  overflow:hidden;
+}
+.technology-logo img{
+  width:100%;
+  height:100%;
+  max-width:46px;
+  max-height:46px;
+  object-fit:contain;
+  display:block;
+}
+.technology-logo.aws img{max-width:50px;max-height:38px}
+html[data-theme="dark"] .technology-logo{background:#fff!important;border-color:rgba(255,255,255,.18)!important}
+.technology-pill{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.technology-pill:hover{transform:translateY(-3px);border-color:rgba(71,204,90,.38);box-shadow:0 18px 42px rgba(0,0,0,.12)}
+.whatsapp-float{background:#25D366;color:#06150c;border-color:rgba(255,255,255,.42)}
+.whatsapp-float .wa-logo{width:24px;height:24px;display:block;flex:0 0 24px}
+.whatsapp-float .label{font-weight:900}
+.whatsapp-action{display:inline-flex;align-items:center;gap:9px;background:#25D366!important;color:#06150c!important;border-color:#25D366!important}
+.whatsapp-action .wa-logo{width:21px;height:21px;display:block}
+@media(max-width:560px){.whatsapp-float .wa-logo{width:25px;height:25px}.whatsapp-float{padding:12px 13px}.whatsapp-float .label{display:none}}
+
+/* Cal.com inline booking · PerlaTech */
+.cal-inline-shell{margin-top:22px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel-2);box-shadow:0 18px 44px rgba(3,20,9,.08)}
+.cal-inline-embed{width:100%;min-height:710px;background:var(--panel-2)}
+.cal-inline-embed iframe{width:100%!important;min-height:710px!important;border:0!important;margin:0!important;border-radius:0!important;background:transparent!important}
+.cal-booking-status{margin:0;padding:12px 16px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted);background:var(--panel)}
+html[data-theme="light"] .cal-inline-shell{background:#fff;border-color:#cfe0d2}
+html[data-theme="light"] .cal-inline-embed{background:#fff}
+html[data-theme="light"] .cal-booking-status{background:#f7fbf8;color:#53695b;border-color:#d9e6dc}
+@media(max-width:700px){.cal-inline-embed,.cal-inline-embed iframe{min-height:780px!important}.booking.card{padding:22px 14px}}
