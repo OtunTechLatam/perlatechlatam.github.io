@@ -8,6 +8,26 @@
   const waLink=text=>whatsapp?`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`:'';
   $$('[data-year]').forEach(n=>n.textContent=new Date().getFullYear());
   const nav=$('#navigation'), toggle=$('.menu-toggle');
+  // Tema visual: claro por defecto, oscuro opcional. La preferencia se guarda sólo en este navegador.
+  const themeToggle=node('button',undefined,'theme-toggle');
+  themeToggle.type='button';
+  const readTheme=()=>document.documentElement.dataset.theme==='dark'?'dark':'light';
+  function paintThemeButton(){
+    const dark=readTheme()==='dark';
+    themeToggle.replaceChildren(node('span',dark?'☀':'☾','theme-icon'),node('span',dark?'Claro':'Oscuro','theme-label'));
+    themeToggle.setAttribute('aria-label',dark?'Cambiar a modo claro':'Cambiar a modo oscuro');
+    themeToggle.title=dark?'Cambiar a modo claro':'Cambiar a modo oscuro';
+    themeToggle.setAttribute('aria-pressed',String(dark));
+  }
+  paintThemeButton();
+  const headerWrap=$('.nav-wrap');
+  if(headerWrap){headerWrap.insertBefore(themeToggle,toggle || nav || null);}
+  themeToggle.addEventListener('click',()=>{
+    const next=readTheme()==='dark'?'light':'dark';
+    document.documentElement.dataset.theme=next;
+    try{localStorage.setItem('perlatech-theme',next);}catch{}
+    paintThemeButton();
+  });
   function closeMenu(){nav?.classList.remove('open');toggle?.setAttribute('aria-expanded','false');}
   toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));});
   nav?.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
@@ -96,6 +116,68 @@
     const wa=node('a',undefined,'whatsapp-float');wa.href=waLink('Hola PerlaTech. Quiero conversar sobre un proyecto.');wa.target='_blank';wa.rel='noopener noreferrer';wa.setAttribute('aria-label','Conversar con PerlaTech por WhatsApp');
     wa.append(node('span','✦'),node('span','WhatsApp','label'));document.body.append(wa);
   }
+  // Movimiento sutil y navegación visual. Se desactiva automáticamente si el usuario prefiere reducir animaciones.
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Barra de progreso de lectura.
+  const progress=node('div',undefined,'scroll-progress');progress.setAttribute('aria-hidden','true');document.body.append(progress);
+  const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.setProperty('--scroll-progress',max>0?Math.min(1,scrollY/max):0);};
+  addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+
+  // Aparición progresiva al entrar al viewport. Sin JavaScript el contenido permanece visible.
+  if(!reduceMotion && 'IntersectionObserver' in window){
+    const revealTargets=$$('main > section, .service-card, .card, .value-card, .project-feature, .showcase, .solution-detail, .process-list li, .brand-panel');
+    revealTargets.forEach((el,i)=>{el.classList.add('reveal-ready');el.style.setProperty('--reveal-delay',`${Math.min((i%4)*70,210)}ms`);});
+    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('reveal-visible');revealObserver.unobserve(entry.target);}}),{threshold:.12,rootMargin:'0px 0px -45px'});
+    revealTargets.forEach(el=>revealObserver.observe(el));
+  }
+
+  // Banda continua de capacidades en la portada.
+  const strip=$('.strip .container');
+  if(strip && !strip.dataset.motionReady){
+    strip.dataset.motionReady='true';strip.classList.add('marquee-shell');
+    const items=[...strip.children];
+    if(items.length>2){
+      const track=node('div',undefined,'marquee-track');items.forEach(el=>track.append(el));
+      const clone=track.cloneNode(true);clone.setAttribute('aria-hidden','true');
+      strip.replaceChildren(track,clone);
+      if(reduceMotion)strip.classList.add('motion-paused');
+    }
+  }
+
+  // Carruseles reutilizables: scroll-snap + botones + autoplay suave sólo cuando tiene sentido.
+  $$('[data-carousel]').forEach((carousel,index)=>{
+    const slides=[...carousel.children];if(slides.length<2)return;
+    carousel.classList.add('carousel-enhanced');carousel.tabIndex=0;carousel.setAttribute('role','region');carousel.setAttribute('aria-label',carousel.getAttribute('aria-label')||'Carrusel de contenido');
+    slides.forEach((slide,i)=>{slide.classList.add('carousel-slide');slide.setAttribute('data-slide',String(i+1));});
+    const ui=node('div',undefined,'carousel-ui');
+    const status=node('span',`1 / ${slides.length}`,'carousel-status');status.setAttribute('aria-live','polite');
+    const prev=button('←',()=>move(-1),'carousel-control');prev.setAttribute('aria-label','Anterior');
+    const next=button('→',()=>move(1),'carousel-control');next.setAttribute('aria-label','Siguiente');
+    ui.append(status,prev,next);carousel.parentNode.insertBefore(ui,carousel);
+    let active=0,timer=0,paused=false;
+    const slideWidth=()=>{const first=slides[0];return first.getBoundingClientRect().width+parseFloat(getComputedStyle(carousel).gap||0);};
+    function go(to,behavior='smooth'){active=(to+slides.length)%slides.length;carousel.scrollTo({left:active*slideWidth(),behavior:reduceMotion?'auto':behavior});status.textContent=`${active+1} / ${slides.length}`;}
+    function move(dir){go(active+dir);restart();}
+    let raf=0;carousel.addEventListener('scroll',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const w=slideWidth();if(w>0){active=Math.max(0,Math.min(slides.length-1,Math.round(carousel.scrollLeft/w)));status.textContent=`${active+1} / ${slides.length}`;}});},{passive:true});
+    carousel.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();move(1);}if(e.key==='ArrowLeft'){e.preventDefault();move(-1);}});
+    const autoplay=Number(carousel.dataset.autoplay||0);
+    function stop(){if(timer)clearInterval(timer);timer=0;}
+    function start(){stop();if(!reduceMotion && autoplay>=3500 && innerWidth>720 && !paused)timer=setInterval(()=>go(active+1),autoplay);}
+    function restart(){stop();start();}
+    carousel.addEventListener('mouseenter',()=>{paused=true;stop();});carousel.addEventListener('mouseleave',()=>{paused=false;start();});
+    carousel.addEventListener('focusin',()=>{paused=true;stop();});carousel.addEventListener('focusout',()=>{paused=false;start();});
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+    addEventListener('resize',()=>go(active,'auto'),{passive:true});start();
+  });
+
+  // Profundidad mínima en el visual principal, sin interferir con la lectura.
+  const heroMedia=$('.hero-media');
+  if(heroMedia && !reduceMotion && matchMedia('(pointer:fine)').matches){
+    heroMedia.addEventListener('pointermove',e=>{const r=heroMedia.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;heroMedia.style.setProperty('--tilt-x',`${(-y*2.2).toFixed(2)}deg`);heroMedia.style.setProperty('--tilt-y',`${(x*2.8).toFixed(2)}deg`);});
+    heroMedia.addEventListener('pointerleave',()=>{heroMedia.style.setProperty('--tilt-x','0deg');heroMedia.style.setProperty('--tilt-y','0deg');});
+  }
+
   if(!$('#demo-board'))return;
   let state=C.initialDemo(),counter=3,proposal='';const stages=['Nuevo','Propuesta','Proyecto'];
   function log(text){state.activity.unshift(text);state.activity=state.activity.slice(0,12);$('#demo-status').textContent=text;}

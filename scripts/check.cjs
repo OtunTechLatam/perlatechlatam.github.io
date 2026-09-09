@@ -6,7 +6,7 @@ const files=walk(root);let links=0;
 for(const file of files){
   if(file.endsWith('.js'))new vm.Script(fs.readFileSync(file,'utf8'),{filename:file});
   if(!file.endsWith('.html'))continue;
-  const html=fs.readFileSync(file,'utf8');assert.match(html,/<html lang="es">/);
+  const html=fs.readFileSync(file,'utf8');assert.match(html,/<html lang="es"(?:\s+[^>]*)?>/);
   for(const match of html.matchAll(/(?:href|src)="([^"]+)"/g)){
     let url=match[1];if(/^(https?:|mailto:|tel:|data:)/.test(url))continue;
     const [rawWithQuery,hash]=url.split('#'),raw=rawWithQuery.split('?')[0];let target;

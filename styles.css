@@ -27,7 +27,217 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .prose{max-width:880px;padding-bottom:80px}.prose h2{font-size:1.5rem;margin-top:34px}.demo-heading{display:flex;align-items:center;justify-content:space-between;gap:38px;padding-block:48px 30px}.demo-heading h1{font-size:3.1rem}.demo-heading .notice{max-width:440px;margin:0}.demo-shell{padding:28px;border:1px solid var(--line);border-radius:20px;background:#06130c;box-shadow:var(--shadow)}.demo-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:25px;margin-bottom:27px;border-bottom:1px solid var(--line)}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button{padding:10px 14px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-weight:700}.tabs button[aria-selected=true]{background:#14301c;color:#b8f28d}.demo-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}.demo-kpis>div{padding:18px;border:1px solid var(--line);border-radius:11px;color:var(--muted);font-size:.78rem;background:#041109}.demo-kpis strong{display:block;color:#fff;font-size:1.65rem}.kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:30px}.kanban-column{padding:14px;border-radius:12px;background:#041109}.kanban-column>h3{font-size:.88rem;margin-bottom:20px}.lead-card{padding:15px;margin-bottom:12px;border:1px solid #234b2a;border-radius:10px;background:#091a11;overflow-wrap:anywhere}.lead-card .tag{margin-bottom:11px}.lead-card p{font-size:.8rem;margin-bottom:10px}.lead-card strong{display:block;font-size:.93rem}.lead-card button{width:100%;margin-top:12px;padding:9px;font-size:.74rem}.lead-card small{display:block;color:var(--muted);font-size:.73rem}.activity{max-height:180px;overflow:auto;list-style:none;padding:0;color:var(--muted);font-size:.83rem}.activity li{padding:9px 0;border-bottom:1px solid var(--line-soft)}.empty{padding:28px;border-radius:12px;background:#041109;color:var(--muted)}.milestone,.ticket{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:21px;border:1px solid var(--line);border-radius:12px;background:#07170e}.milestone p,.ticket p{margin:5px 0;font-size:.87rem}.proposal{padding:27px;border:1px solid var(--line);border-radius:12px;background:#041109}.proposal pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}.proposal .tag{margin-bottom:18px}
 .whatsapp-float{position:fixed;right:22px;bottom:22px;z-index:50;display:flex;align-items:center;gap:9px;padding:13px 17px;border-radius:999px;background:#23c763;color:#031007;font-weight:900;font-size:.85rem;box-shadow:0 18px 45px rgba(0,0,0,.34);transition:transform .2s ease}.whatsapp-float:hover{transform:translateY(-3px)}.whatsapp-float span{font-size:1rem}
 footer{margin-top:10px;padding-top:50px;border-top:1px solid var(--line-soft);background:#020906}.footer-grid{display:grid;grid-template-columns:1.3fr 1fr .8fr;gap:44px;padding-bottom:40px}.footer-grid>div:not(:first-child){display:flex;flex-direction:column;gap:10px;min-width:0;font-size:.84rem;overflow-wrap:anywhere}.footer-grid strong{margin-bottom:9px}.footer-grid a:hover{color:var(--lime)}footer p{margin-top:20px;font-size:.83rem}.footer-bottom{display:flex;justify-content:space-between;gap:20px;padding-block:22px;border-top:1px solid var(--line-soft);color:#708078;font-size:.74rem}
+
+/* ===== Selector de tema ===== */
+html{color-scheme:light}html[data-theme="dark"]{color-scheme:dark}
+body,.header,.strip,.service-card,.card,.tint,.value-card,.project-feature,.showcase,.brand-panel,
+input,select,textarea,.notice,.summary,.demo-shell,.tabs button,.demo-kpis>div,.kanban-column,.lead-card,
+.empty,.milestone,.ticket,.proposal,footer{transition:background-color .22s ease,border-color .22s ease,color .22s ease,box-shadow .22s ease}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:88px;padding:9px 12px;margin-left:auto;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);font-weight:800;font-size:.78rem;line-height:1;white-space:nowrap;box-shadow:none}
+.theme-toggle:hover{border-color:var(--lime);transform:translateY(-1px)}
+.theme-icon{font-size:1rem;line-height:1}.theme-label{line-height:1}
+
+/* ===== Modo claro ===== */
+html[data-theme="light"]{
+  --bg:#f7fbf8;--bg-2:#eef7f1;--panel:#ffffff;--panel-2:#f1f8f3;
+  --ink:#10261a;--muted:#5a6d61;--lime:#3eaa25;--lime-2:#1f9e55;
+  --line:#d6e5da;--line-soft:#e5eee8;--shadow:0 24px 70px rgba(26,70,42,.10)
+}
+html[data-theme="light"] body{background:radial-gradient(circle at 82% 0,#e6f7e9 0,transparent 32%),linear-gradient(180deg,#fbfdfb 0,#f6faf7 100%);color:var(--ink)}
+html[data-theme="light"] p{color:var(--muted)}
+html[data-theme="light"] .header{background:rgba(255,255,255,.94);border-bottom-color:#dce9df;box-shadow:0 8px 28px rgba(21,64,35,.045)}
+html[data-theme="light"] .brand small{color:#66796d}
+html[data-theme="light"] .header nav>a:not(.button){color:#20372a}
+html[data-theme="light"] .header nav>a:hover,html[data-theme="light"] .header nav>a[aria-current]{color:#238c35}
+html[data-theme="light"] .header nav>a[aria-current]:after{background:#35a83f;box-shadow:none}
+html[data-theme="light"] .menu-toggle,html[data-theme="light"] .theme-toggle{background:#fff;color:#173222;border-color:#d2e3d6}
+html[data-theme="light"] .theme-toggle:hover{background:#edf7f0;border-color:#55b461}
+html[data-theme="light"] .button{background:#57d928;color:#09200f}
+html[data-theme="light"] .button.secondary{background:#fff;border-color:#bdd8c4;color:#173222}
+html[data-theme="light"] .button.secondary:hover{background:#edf7f0;border-color:#49aa57}
+html[data-theme="light"] .lead{color:#566b5e}
+html[data-theme="light"] .hero-proof span{border-color:#c7decf;color:#456052;background:rgba(255,255,255,.86)}
+/* El visual del hero se conserva oscuro para mantener contraste de marca. */
+html[data-theme="light"] .strip{background:#fff;border-color:#e0ebe3}
+html[data-theme="light"] .strip span{color:#6c8174}
+html[data-theme="light"] .strip p{color:#1e3827}
+html[data-theme="light"] .service-card,html[data-theme="light"] .card{background:linear-gradient(145deg,#ffffff,#f9fcfa);border-color:#d8e7dc;box-shadow:0 14px 42px rgba(27,73,43,.065)}
+html[data-theme="light"] .service-card:hover{border-color:#7fc18a;box-shadow:0 18px 48px rgba(27,73,43,.10)}
+html[data-theme="light"] .service-icon{border-color:#c8dfce;background:#f2f9f3}
+html[data-theme="light"] .tint{background:linear-gradient(180deg,#edf7f0,#f7fbf8);border-color:#dce9df}
+html[data-theme="light"] .process-list li{border-bottom-color:#d7e6da}
+/* CTA oscuro intencional: una única zona de alto impacto, no toda la página. */
+html[data-theme="light"] .cta{border-color:#2f7542;background:radial-gradient(circle at 85% 25%,#286f35 0,transparent 30%),linear-gradient(120deg,#123f24,#0a2c19);color:#fff}
+html[data-theme="light"] .cta p{color:#d2e4d7}
+html[data-theme="light"] .value-card{background:#fff;border-color:#d8e7dc}
+html[data-theme="light"] .value-card b{background:#e9f6ec;color:#2a9839}
+html[data-theme="light"] .project-feature{background:#fff;border-color:#cfe1d3;box-shadow:0 18px 50px rgba(25,68,40,.07)}
+/* El panel visual de proyectos permanece verde oscuro; el contenido pasa a claro. */
+html[data-theme="light"] .project-copy{background:#fff}
+html[data-theme="light"] .project-copy .clean-list li{color:#466052;border-color:#e0ebe3}
+html[data-theme="light"] .tagline{color:#50675a;border-color:#dbe8de}
+html[data-theme="light"] .clean-list li{color:#455d50;border-bottom-color:#dfebe2}
+html[data-theme="light"] .clean-list li:before{color:#2fa13d}
+/* Showcase y panel de marca siguen oscuros como piezas de contraste. */
+html[data-theme="light"] .contact-form label,html[data-theme="light"] label{color:#20372a}
+html[data-theme="light"] input,html[data-theme="light"] select,html[data-theme="light"] textarea{background:#fff;color:#173222;border-color:#c7dacb}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#829489}
+html[data-theme="light"] select option{background:#fff;color:#173222}
+html[data-theme="light"] .notice{background:#edf8f0;border-color:#bfdbc5;color:#245d32}
+html[data-theme="light"] .booking-note{color:#667b6e}
+html[data-theme="light"] progress,html[data-theme="light"] progress::-webkit-progress-bar{background:#dceade}
+html[data-theme="light"] .summary{background:#f7fbf8;border-color:#d5e5d9;color:#173222}
+html[data-theme="light"] .form-status{color:#277d3a}
+html[data-theme="light"] .demo-shell{background:#fff;border-color:#d5e4d9;box-shadow:0 18px 55px rgba(28,70,42,.08)}
+html[data-theme="light"] .demo-toolbar{border-color:#dce8df}
+html[data-theme="light"] .tabs button{color:#607468}
+html[data-theme="light"] .tabs button[aria-selected=true]{background:#e8f5eb;color:#236c32}
+html[data-theme="light"] .demo-kpis>div{background:#f8fbf9;border-color:#d9e6dc;color:#617568}
+html[data-theme="light"] .demo-kpis strong{color:#183222}
+html[data-theme="light"] .kanban-column{background:#f0f6f2}
+html[data-theme="light"] .lead-card{background:#fff;border-color:#d2e2d6}
+html[data-theme="light"] .activity{color:#607468}
+html[data-theme="light"] .activity li{border-color:#dce8df}
+html[data-theme="light"] .empty{background:#f2f7f3;color:#65796d}
+html[data-theme="light"] .milestone,html[data-theme="light"] .ticket{background:#fff;border-color:#d6e5da}
+html[data-theme="light"] .proposal{background:#f8fbf9;border-color:#d6e5da}
+html[data-theme="light"] footer{background:#edf5ef;border-top-color:#d8e6dc;color:#20382a}
+html[data-theme="light"] footer p{color:#617568}
+html[data-theme="light"] .footer-bottom{border-top-color:#d6e4da;color:#718378}
+html[data-theme="light"] .footer-grid a{color:#314b3b}
+html[data-theme="light"] .footer-grid a:hover{color:#248d35}
+html[data-theme="light"] .whatsapp-float{box-shadow:0 16px 38px rgba(28,95,49,.20)}
+
 @media(max-width:1100px){.container{width:calc(100% - 48px)}.header nav{gap:17px}.hero{gap:30px}.hero-media{min-height:470px}.split,.wizard-layout,.solution-detail{gap:36px}.three,.six{gap:16px}.service-card,.card{padding:25px}.showcase{padding:32px}.value-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:850px){.menu-toggle{display:block}.nav-wrap{min-height:78px}.header nav{display:none;position:absolute;top:78px;left:0;right:0;flex-direction:column;align-items:stretch;gap:8px;padding:22px 24px;border-bottom:1px solid var(--line);background:#020b07;box-shadow:0 18px 40px rgba(0,0,0,.34)}.header nav.open{display:flex}.hero{grid-template-columns:1fr;min-height:auto;padding-top:54px}.hero-media{max-width:680px;width:100%;justify-self:center;min-height:440px}.strip .container{flex-wrap:wrap;justify-content:flex-start;gap:13px 25px}.strip span{width:100%}.three,.six{grid-template-columns:1fr}.service-card{min-height:220px}.split,.wizard-layout{grid-template-columns:1fr;gap:30px}.section{padding-block:60px}.section-heading{align-items:start}.cta{align-items:start;flex-direction:column;padding:36px}.showcase,.project-feature{grid-template-columns:1fr}.sample-board{grid-template-columns:repeat(3,1fr)}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}.demo-heading{align-items:start}.kanban{grid-template-columns:1fr}.kanban-column{display:grid;grid-template-columns:1fr 1fr;gap:12px}.kanban-column>h3{grid-column:1/-1}.booking-options{grid-template-columns:1fr}.project-visual{min-height:300px}}
 @media(max-width:560px){.container{width:calc(100% - 30px)}.brand img{width:43px;height:43px}.brand>span{font-size:1.32rem}.brand small{font-size:.49rem}.page-intro{padding-block:44px 30px}.page-intro h1{font-size:2.65rem}.hero{padding-top:42px;padding-bottom:42px}.hero h1{font-size:3rem}.hero-media{min-height:370px}.hero-badges{right:14px;top:14px}.hero-badges span:nth-child(n+3){display:none}.hero-media-caption{left:18px;right:18px;bottom:18px}.actions{flex-direction:column;align-items:stretch}.section-heading{flex-direction:column;gap:18px}.solution-detail{grid-template-columns:1fr;gap:0;padding-block:28px}.solution-detail>div:nth-child(2){padding-top:0}.sample-board{grid-template-columns:1fr}.showcase{padding:24px}.footer-grid{grid-template-columns:1fr;gap:28px}.footer-grid>div:first-child{grid-column:auto}.footer-bottom{flex-direction:column}.card{padding:22px}.demo-heading{flex-direction:column;gap:12px}.demo-heading h1{font-size:2.45rem}.demo-shell{padding:17px}.demo-kpis{gap:8px}.demo-kpis>div{padding:11px 8px;font-size:.68rem}.demo-kpis strong{font-size:1.35rem}.kanban-column{grid-template-columns:1fr}.milestone,.ticket{align-items:start;flex-direction:column;gap:12px}.wizard-actions{flex-wrap:wrap}.wizard-actions .button{flex:1}.cta{padding:28px}.lead{font-size:1rem}.brand-panel img{width:190px;height:190px}.value-grid{grid-template-columns:1fr}.whatsapp-float{right:14px;bottom:14px;padding:12px 14px}.whatsapp-float .label{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+
+@media(max-width:850px){
+  html[data-theme="light"] .header nav{background:#fff;border-bottom-color:#d6e5da;box-shadow:0 18px 40px rgba(27,70,41,.10)}
+  .theme-toggle{min-width:46px;padding:9px 11px}
+  .theme-label{display:none}
+}
+@media(max-width:560px){.theme-toggle{margin-left:auto}.theme-icon{font-size:1.05rem}}
+
+
+/* ===== Motion system: profesional, sutil e intuitivo ===== */
+.scroll-progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:1000;pointer-events:none;background:linear-gradient(90deg,var(--lime) calc(var(--scroll-progress,0)*100%),transparent 0);transform-origin:left center;box-shadow:0 0 16px rgba(121,239,22,.25)}
+
+.reveal-ready{opacity:0;transform:translateY(22px);transition:opacity .65s ease var(--reveal-delay,0ms),transform .65s cubic-bezier(.2,.8,.2,1) var(--reveal-delay,0ms)}
+.reveal-ready.reveal-visible{opacity:1;transform:none}
+
+/* Banda de capacidades continua */
+.strip{overflow:hidden}.strip .container.marquee-shell{width:100%;max-width:none;padding-inline:0;display:flex;justify-content:flex-start;gap:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.marquee-track{display:flex;align-items:center;gap:46px;min-width:max-content;padding:20px 23px;animation:perla-marquee 28s linear infinite}
+.marquee-track>*{white-space:nowrap}.marquee-shell:hover .marquee-track,.marquee-shell:focus-within .marquee-track,.motion-paused .marquee-track{animation-play-state:paused}
+@keyframes perla-marquee{to{transform:translateX(-100%)}}
+
+/* Carruseles: el grid original sigue funcionando sin JS */
+.carousel-enhanced{display:flex!important;grid-template-columns:none!important;gap:20px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding:5px 2px 18px;scroll-behavior:smooth}
+.carousel-enhanced::-webkit-scrollbar{display:none}.carousel-slide{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;scroll-snap-stop:always}
+.value-grid.carousel-enhanced .carousel-slide{flex-basis:calc((100% - 60px)/4)}
+.carousel-ui{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin:-8px 0 14px}.carousel-status{min-width:52px;color:var(--muted);font-size:.75rem;font-weight:800;letter-spacing:.08em;text-align:center}
+.carousel-control{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--ink);font-size:1.05rem;font-weight:900;transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.carousel-control:hover{transform:translateY(-2px);border-color:var(--lime);background:var(--panel-2)}
+html[data-theme="light"] .carousel-control{background:#fff;border-color:#d3e4d7;color:#173222;box-shadow:0 8px 22px rgba(27,73,43,.06)}
+html[data-theme="light"] .carousel-control:hover{background:#eef8f0;border-color:#68b874}
+
+/* Tarjetas con feedback visual, sin efectos llamativos */
+.carousel-slide,.service-card,.value-card,.card{will-change:transform}.service-card:hover,.value-card:hover,.card:hover{box-shadow:0 22px 55px rgba(0,0,0,.15)}
+html[data-theme="light"] .service-card:hover,html[data-theme="light"] .value-card:hover,html[data-theme="light"] .card:hover{box-shadow:0 22px 55px rgba(27,73,43,.12)}
+.hero-media{transform:perspective(1200px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform .16s ease-out;transform-style:preserve-3d}.hero-media-caption,.hero-badges{transform:translateZ(18px)}
+
+/* Señal visual de que un carrusel puede deslizarse */
+.carousel-enhanced{mask-image:linear-gradient(90deg,#000 0,#000 96%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,#000 0,#000 96%,transparent 100%)}
+.carousel-enhanced:focus-visible{outline:2px solid var(--lime);outline-offset:5px;border-radius:16px}
+
+@media(max-width:1100px){.carousel-slide{flex-basis:calc((100% - 20px)/2)}.value-grid.carousel-enhanced .carousel-slide{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:720px){.carousel-slide,.value-grid.carousel-enhanced .carousel-slide{flex-basis:86%}.carousel-ui{margin-top:0}.marquee-track{gap:32px;animation-duration:24s}.carousel-enhanced{padding-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.reveal-ready{opacity:1!important;transform:none!important}.marquee-track{animation:none!important}.hero-media{transform:none!important}.carousel-enhanced{scroll-behavior:auto}.scroll-progress{box-shadow:none}}
+
+/* ===== Hotfix 2026-09-09: contraste y legibilidad real en modo claro ===== */
+/* Los siguientes bloques se mantienen oscuros deliberadamente en el tema claro.
+   Sus textos NO deben heredar --ink/--muted del tema claro. */
+html[data-theme="light"] .showcase,
+html[data-theme="light"] .brand-panel,
+html[data-theme="light"] .project-visual{
+  color:#f7fbf8;
+}
+html[data-theme="light"] .showcase h1,
+html[data-theme="light"] .showcase h2,
+html[data-theme="light"] .showcase h3,
+html[data-theme="light"] .showcase h4,
+html[data-theme="light"] .showcase strong,
+html[data-theme="light"] .brand-panel h1,
+html[data-theme="light"] .brand-panel h2,
+html[data-theme="light"] .brand-panel h3,
+html[data-theme="light"] .brand-panel h4,
+html[data-theme="light"] .brand-panel strong,
+html[data-theme="light"] .project-visual h1,
+html[data-theme="light"] .project-visual h2,
+html[data-theme="light"] .project-visual h3,
+html[data-theme="light"] .project-visual h4,
+html[data-theme="light"] .project-visual strong{
+  color:#ffffff;
+}
+html[data-theme="light"] .showcase p,
+html[data-theme="light"] .showcase small,
+html[data-theme="light"] .brand-panel p,
+html[data-theme="light"] .brand-panel small,
+html[data-theme="light"] .project-visual p,
+html[data-theme="light"] .project-visual small{
+  color:#c9d9cf;
+}
+html[data-theme="light"] .showcase .sample-board{
+  color:#f7fbf8;
+  background:#041109;
+  border-color:#285331;
+}
+html[data-theme="light"] .showcase .sample-board h3{color:#d8e6dd}
+html[data-theme="light"] .showcase .sample-board article{
+  color:#f7fbf8;
+  background:#091b11;
+  border-color:#285331;
+}
+html[data-theme="light"] .showcase .sample-board article strong{color:#ffffff}
+html[data-theme="light"] .showcase .sample-board article small{color:#aebfb4}
+html[data-theme="light"] .showcase .tag,
+html[data-theme="light"] .brand-panel span,
+html[data-theme="light"] .project-visual .tag{color:#b7fa82}
+
+/* Mejor jerarquía de lectura en páginas interiores */
+.page-intro h1{font-size:clamp(2.8rem,5.25vw,5.25rem);line-height:1.04}
+html[data-theme="light"] .page-intro h1,
+html[data-theme="light"] .demo-heading h1,
+html[data-theme="light"] .section-heading h2{color:#10261a}
+html[data-theme="light"] .page-intro .lead,
+html[data-theme="light"] .demo-heading .notice,
+html[data-theme="light"] .section-heading>.lead{color:#4f6658}
+
+/* El panel SETECMA conserva contraste incluso si cambia el tema durante la sesión. */
+.project-visual strong{color:#fff}
+.project-visual p{color:#c7d6cc}
+.brand-panel h2{color:#fff}
+.showcase{color:#f4f8f4}
+.showcase h2,.showcase strong{color:#fff}
+.showcase p{color:#c4d3c9}
+
+/* Mejor separación visual entre contenido claro y piezas de contraste */
+html[data-theme="light"] .showcase,
+html[data-theme="light"] .brand-panel,
+html[data-theme="light"] .project-visual{
+  box-shadow:inset 0 0 0 1px rgba(111,205,123,.08);
+}
+html[data-theme="light"] .project-copy h2,
+html[data-theme="light"] .project-copy h3{color:#10261a}
+html[data-theme="light"] .project-copy p{color:#53695b}
+
+@media(max-width:1100px){
+  .page-intro h1{font-size:clamp(2.7rem,5vw,4.7rem)}
+}
+@media(max-width:720px){
+  .page-intro h1{font-size:clamp(2.45rem,11vw,3.6rem)}
+  .demo-heading h1{font-size:clamp(2.35rem,10vw,3.2rem)}
+}
