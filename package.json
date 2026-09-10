@@ -1,6 +1,6 @@
 {
   "name": "perlatech-github-pages",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "private": true,
   "description": "Sitio comercial estático de PerlaTech para GitHub Pages con modo claro/oscuro, motion, captación y analítica configurable",
   "scripts": {

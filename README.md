@@ -19,3 +19,7 @@ El carrusel usa logotipos SVG de marca en lugar de iniciales genéricas. Docker,
 ## Agenda Cal.com conectada
 
 Evento público conectado: `https://cal.com/perla-tech/30min`. La página `pages/agenda.html` usa el embed inline oficial de Cal.com y conserva un enlace externo como respaldo.
+
+
+## Agenda
+El diagnóstico inicial está configurado a 30 minutos y conectado con https://cal.com/perla-tech/30min.
