@@ -23,3 +23,7 @@ Evento público conectado: `https://cal.com/perla-tech/30min`. La página `pages
 
 ## Agenda
 El diagnóstico inicial está configurado a 30 minutos y conectado con https://cal.com/perla-tech/30min.
+
+
+## Supabase
+Los formularios están conectados a la Edge Function `perlatech-lead` del proyecto PerlaTechLatam. La clave incluida en `config.js` es la clave pública anon destinada al navegador; nunca poner una service role key en el repositorio.

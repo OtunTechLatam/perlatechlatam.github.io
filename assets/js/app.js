@@ -80,7 +80,9 @@
     pending.add(form);submit.disabled=true;status.textContent='Enviando solicitud…';
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
     try{
-      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,...payload,requestId:req.id,consent:true,source:'perlatech-web'}),signal:controller.signal,credentials:'omit'});
+      const headers={'Content-Type':'application/json'};
+      if(typeof cfg.supabaseAnonKey==='string' && cfg.supabaseAnonKey.trim()){headers.apikey=cfg.supabaseAnonKey.trim();headers.Authorization=`Bearer ${cfg.supabaseAnonKey.trim()}`;}
+      const response=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({type,...payload,requestId:req.id,consent:true,source:'perlatech-web',pageUrl:location.href}),signal:controller.signal,credentials:'omit'});
       if(!response.ok)throw new Error('Rejected');
       const body=await response.json();
       if(body.received!==true || typeof body.id!=='string' || !body.id.trim() || body.id.length>120)throw new Error('Invalid receipt');
