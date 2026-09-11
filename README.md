@@ -1,29 +1,60 @@
-# PerlaTech V3.1 Comercial
+# PerlaTech Commercial V4 — primera implementación
 
-Sitio estático para GitHub Pages con modo claro/oscuro, tecnología en movimiento, WhatsApp contextual, diagnóstico, agenda con fallback, demo y medición de conversiones preparada para GA4.
+Esta carpeta contiene la primera implementación del rediseño comercial acordado.
 
-## Estado
-- Carrusel continuo de tecnologías: activo y visible en Inicio.
-- WhatsApp contextual: activo y visible en todas las páginas principales.
-- Eventos comerciales: activos localmente; se envían a GA4 al configurar un Measurement ID real.
-- GA4: requiere `ga4MeasurementId`.
-- Cal.com / Calendly / Microsoft Bookings: requiere `bookingUrl`.
-- Endpoint de formularios: requiere `requestEndpoint`.
+## Archivos incluidos
 
-Consulta `docs/ACTIVAR_INTEGRACIONES.md`.
+- `index.html`  
+  Reemplazo completo de la portada actual.
+- `assets/css/commercial-v4.css`  
+  Capa de estilos adicional. Mantiene `styles.css` actual y agrega únicamente los componentes nuevos.
+- `DIAGNOSTICO-PATCH.md`  
+  Cambio recomendado para eliminar el anclaje de presupuesto bajo del diagnóstico.
 
-## V3.2 · Logos de marca
-El carrusel usa logotipos SVG de marca en lugar de iniciales genéricas. Docker, Kubernetes, Terraform, .NET, Python, Odoo, Grafana, Jenkins, GitHub Actions, Prometheus, SonarQube y WhatsApp se sirven mediante Simple Icons CDN; AWS usa el SVG de Wikimedia Commons proveniente de Amazon. El sitio conserva nombre y descripción textual para accesibilidad.
+## Qué cambia en la portada
 
+1. Nuevo hero orientado a negocio.
+2. CTA principal: `Solicitar diagnóstico`.
+3. Bloque de beneficios empresariales.
+4. Selector `¿Qué necesitas resolver?`.
+5. Presentación de PerlaTech separada de la propuesta de valor.
+6. Servicios reorganizados por necesidad.
+7. Segmentación por tipo/etapa de organización.
+8. Proceso de trabajo más claro.
+9. Diagnóstico inicial destacado.
+10. SETECMA se mantiene como caso real.
+11. Soporte y evolución ganan visibilidad.
+12. Tecnologías se mueven cerca del final.
+13. FAQ comercial.
+14. Footer reorganizado.
+15. SEO de portada reescrito alrededor de intención empresarial.
 
-## Agenda Cal.com conectada
+## Cómo probarlo localmente
 
-Evento público conectado: `https://cal.com/perla-tech/30min`. La página `pages/agenda.html` usa el embed inline oficial de Cal.com y conserva un enlace externo como respaldo.
+Copia `index.html` y `assets/css/commercial-v4.css` dentro de una copia del repositorio actual.
 
+El `index.html` sigue utilizando estos archivos existentes:
 
-## Agenda
-El diagnóstico inicial está configurado a 30 minutos y conectado con https://cal.com/perla-tech/30min.
+- `styles.css`
+- `assets/js/config.js`
+- `assets/js/core.js`
+- `assets/js/app.js`
+- `assets/logo-perlatech-clean.png`
+- `assets/hero-pearl.jpg`
+- `assets/favicon.png`
 
+Por lo tanto, no reemplaza las integraciones existentes de Cal.com, Supabase, WhatsApp o analítica.
 
-## Supabase
-Los formularios están conectados a la Edge Function `perlatech-lead` del proyecto PerlaTechLatam. La clave incluida en `config.js` es la clave pública anon destinada al navegador; nunca poner una service role key en el repositorio.
+## Publicación en GitHub Pages
+
+1. Haz una copia/backup de la rama `main`.
+2. Sube `assets/css/commercial-v4.css`.
+3. Reemplaza `index.html` por el incluido en esta carpeta.
+4. Aplica el cambio indicado en `DIAGNOSTICO-PATCH.md`.
+5. Confirma que los enlaces de navegación carguen correctamente.
+6. Prueba escritorio y móvil.
+7. Publica el commit en la rama utilizada por GitHub Pages.
+
+## Nota
+
+La integración GitHub disponible en esta conversación tiene acceso de lectura pero rechazó la creación de una rama con HTTP 403. Por eso esta versión se entrega como paquete listo para aplicar, sin modificar tu repositorio remoto.
