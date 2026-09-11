@@ -230,9 +230,9 @@
 
   // Aparición progresiva al entrar al viewport. Sin JavaScript el contenido permanece visible.
   if(!reduceMotion && 'IntersectionObserver' in window){
-    const revealTargets=$$('main > section, .service-card, .card, .value-card, .project-feature, .showcase, .solution-detail, .process-list li, .brand-panel');
+    const revealTargets=$$('.service-card, .card, .value-card, .project-feature, .showcase, .solution-detail, .process-list li, .brand-panel');
     revealTargets.forEach((el,i)=>{el.classList.add('reveal-ready');el.style.setProperty('--reveal-delay',`${Math.min((i%4)*70,210)}ms`);});
-    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('reveal-visible');revealObserver.unobserve(entry.target);}}),{threshold:.12,rootMargin:'0px 0px -45px'});
+    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('reveal-visible');revealObserver.unobserve(entry.target);}}),{threshold:0,rootMargin:'0px 0px -24px'});
     revealTargets.forEach(el=>revealObserver.observe(el));
   }
 
@@ -259,20 +259,33 @@
     const prev=button('←',()=>move(-1),'carousel-control');prev.setAttribute('aria-label','Anterior');
     const next=button('→',()=>move(1),'carousel-control');next.setAttribute('aria-label','Siguiente');
     ui.append(status,prev,next);carousel.parentNode.insertBefore(ui,carousel);
-    let active=0,timer=0,paused=false;
-    const slideWidth=()=>{const first=slides[0];return first.getBoundingClientRect().width+parseFloat(getComputedStyle(carousel).gap||0);};
-    function go(to,behavior='smooth'){active=(to+slides.length)%slides.length;carousel.scrollTo({left:active*slideWidth(),behavior:reduceMotion?'auto':behavior});status.textContent=`${active+1} / ${slides.length}`;}
-    function move(dir){go(active+dir);restart();}
-    let raf=0;carousel.addEventListener('scroll',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const w=slideWidth();if(w>0){active=Math.max(0,Math.min(slides.length-1,Math.round(carousel.scrollLeft/w)));status.textContent=`${active+1} / ${slides.length}`;}});},{passive:true});
-    carousel.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();move(1);}if(e.key==='ArrowLeft'){e.preventDefault();move(-1);}});
-    const autoplay=Number(carousel.dataset.autoplay||0);
-    function stop(){if(timer)clearInterval(timer);timer=0;}
-    function start(){stop();if(!reduceMotion && autoplay>=3500 && innerWidth>720 && !paused)timer=setInterval(()=>go(active+1),autoplay);}
-    function restart(){stop();start();}
-    carousel.addEventListener('mouseenter',()=>{paused=true;stop();});carousel.addEventListener('mouseleave',()=>{paused=false;start();});
-    carousel.addEventListener('focusin',()=>{paused=true;stop();});carousel.addEventListener('focusout',()=>{paused=false;start();});
-    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
-    addEventListener('resize',()=>go(active,'auto'),{passive:true});start();
+    let active=0;
+    // Navegación manual: no desplazar contenido mientras alguien lo está leyendo.
+    const positions=()=>{
+      const max=Math.max(0,carousel.scrollWidth-carousel.clientWidth);
+      const start=slides[0].offsetLeft;
+      return [...new Set(slides.map(slide=>Math.min(max,Math.max(0,slide.offsetLeft-start))))];
+    };
+    function sync(){
+      const stops=positions();
+      active=stops.reduce((best,pos,i)=>Math.abs(pos-carousel.scrollLeft)<Math.abs(stops[best]-carousel.scrollLeft)?i:best,0);
+      ui.hidden=stops.length<2;
+      status.textContent=`${active+1} / ${stops.length}`;
+      prev.disabled=active===0;next.disabled=active===stops.length-1;
+    }
+    function move(dir){
+      const stops=positions();active=Math.max(0,Math.min(stops.length-1,active+dir));
+      carousel.scrollTo({left:stops[active],behavior:reduceMotion?'auto':'smooth'});
+    }
+    let raf=0;carousel.addEventListener('scroll',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(sync);},{passive:true});
+    carousel.addEventListener('keydown',e=>{
+      if(e.target!==carousel)return;
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();move(e.key==='ArrowRight'?1:-1);}
+    });
+    carousel.style.position='relative';
+    if('ResizeObserver' in window)new ResizeObserver(sync).observe(carousel);
+    else addEventListener('resize',sync,{passive:true});
+    sync();
   });
 
   // Profundidad mínima en el visual principal, sin interferir con la lectura.
