@@ -205,6 +205,43 @@
     decorateWhatsApp(wa,'WhatsApp');document.body.append(wa);
   }
 
+  // Panel de contacto: prepara la consulta; la conversación continúa en WhatsApp.
+  const waFloat=$('.whatsapp-float');
+  if(whatsapp && waFloat){
+    const panel=node('section',undefined,'wa-panel');panel.id='wa-contact-panel';panel.hidden=true;
+    panel.setAttribute('aria-labelledby','wa-contact-title');
+    const head=node('div',undefined,'wa-panel-head');
+    const logo=node('img');logo.src=$('.brand img').src;logo.alt='PerlaTech';logo.width=46;logo.height=46;
+    const title=node('h2','Conversemos por WhatsApp');title.id='wa-contact-title';
+    const trigger=button('',()=>toggle(panel.hidden),'whatsapp-float wa-panel-trigger');
+    decorateWhatsApp(trigger,'Conversemos');trigger.setAttribute('aria-controls',panel.id);trigger.setAttribute('aria-expanded','false');
+    const close=button('×',()=>toggle(false),'wa-panel-close');close.setAttribute('aria-label','Cerrar panel de WhatsApp');
+    head.append(logo,title,close);
+    const body=node('div',undefined,'wa-panel-body');
+    body.append(node('p','Hola 👋 ¿Qué te gustaría mejorar en tu negocio?'));
+    const form=node('form');form.id='wa-contact-form';
+    const group=node('fieldset');const legend=node('legend','¿En qué podemos ayudarte?');group.append(legend);
+    const choices=node('div',undefined,'wa-panel-choices');
+    ['Crear mi web','Automatizar procesos','ERP / CRM','Soporte'].forEach((service,i)=>{
+      const label=node('label');const radio=node('input');radio.type='radio';radio.name='service';radio.value=service;radio.checked=i===0;
+      label.append(radio,node('span',service));choices.append(label);
+    });group.append(choices);
+    const label=node('label','Cuéntanos tu idea (opcional)');label.htmlFor='wa-contact-message';
+    const message=node('textarea');message.id='wa-contact-message';message.rows=3;message.maxLength=1000;message.placeholder='Por ejemplo: necesito una web donde mis clientes puedan agendar.';
+    const next=node('button','Continuar en WhatsApp ↗','button wa-panel-send');next.type='submit';
+    const note=node('p','Se abrirá WhatsApp con tu consulta preparada. Allí podrás enviarla y conversar con nosotros.','wa-panel-note');
+    form.append(group,label,message,next,note);
+    form.addEventListener('submit',e=>{
+      e.preventDefault();const service=form.querySelector('input:checked').value;
+      const text=`Hola PerlaTech. Me interesa: ${service}.\n${message.value.trim()}\n\nEstoy visitando: ${location.origin}${location.pathname}`;
+      window.open(waLink(text),'_blank','noopener,noreferrer');event('whatsapp_panel_continue',{service});
+    });
+    const agenda=node('a','Prefiero agendar una reunión','text-link');agenda.href=$('header a[href*="agenda.html"]').href;
+    body.append(form,agenda);panel.append(head,body);waFloat.replaceWith(trigger);document.body.append(panel);
+    function toggle(open){panel.hidden=!open;trigger.setAttribute('aria-expanded',String(open));if(open){close.focus();event('whatsapp_panel_opened');}else trigger.focus();}
+    panel.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();toggle(false);}});
+  }
+
   // Medición de acciones comerciales sin capturar contenido ni datos personales.
   document.addEventListener('click',e=>{
     const el=e.target.closest('a,button');if(!el)return;
