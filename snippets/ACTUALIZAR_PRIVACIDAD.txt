@@ -1,0 +1,20 @@
+EN pages/privacidad.html, REEMPLAZA el párrafo de “Cómo se envían” por este:
+
+<h2>Cómo se envían</h2>
+<p>
+Los formularios de contacto, diagnóstico y soporte se envían primero a la
+infraestructura de PerlaTech alojada en Supabase, donde pueden almacenarse como
+registro comercial para atender la solicitud. Una vez confirmada la recepción,
+el sitio puede utilizar FormSubmit como servicio externo de notificación por
+correo para avisar a PerlaTech y enviar una confirmación automática al correo
+indicado por la persona usuaria. Si alguno de estos servicios no está
+disponible, se puede ofrecer WhatsApp o correo como alternativa.
+</p>
+
+Y AGREGA este párrafo dentro de “Agenda y servicios externos” o inmediatamente después:
+
+<p>
+Los proveedores externos utilizados para agenda o notificaciones pueden
+procesar los datos estrictamente necesarios para prestar su servicio, de acuerdo
+con sus propias políticas y condiciones.
+</p>

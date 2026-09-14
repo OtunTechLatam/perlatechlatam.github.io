@@ -1,0 +1,10 @@
+AGREGA ESTA LÍNEA JUSTO DESPUÉS DE app.js:
+
+<script defer src="../assets/js/form-notify.js?v=20260914-v2"></script>
+
+Debe quedar así:
+
+<script defer src="../assets/js/config.js?v=20260911-v37"></script>
+<script defer src="../assets/js/core.js?v=20260911-v37"></script>
+<script defer src="../assets/js/app.js?v=20260911-v37"></script>
+<script defer src="../assets/js/form-notify.js?v=20260914-v2"></script>
